@@ -29,8 +29,6 @@ public class PrincipaleControleur {
 	
 	@FXML
 	public void pendu() {
-		System.out.println(System.getProperty("args"));
-
 		String hote = "localhost";
 		int port = 3000;
 			try {
@@ -77,13 +75,11 @@ public class PrincipaleControleur {
 	public void allumette() {
 		try {
 			int port = 3001;
-			InterfaceAllumettes obj;
-				obj = (InterfaceAllumettes) Naming.lookup ("rmi://localhost:"+port+"/Allumettes");
+			InterfaceAllumettes obj = (InterfaceAllumettes) Naming.lookup ("rmi://localhost:"+port+"/Allumettes");
 			
 			UUID uuid = obj.creerPartie();
-			obj.initialise(uuid);
 			
-			System.out.println("UUID partie = " + uuid);
+			obj.initialise(uuid);
 			
 			Stage nStage = new Stage();
 			
