@@ -29,15 +29,15 @@ public class AllumetteControleur {
 	private UUID idPartie;
 	
 	/**
-	 * {@code Affiche les allumettes,
-	 * le premier joueur � devoir jouer,
-	 * lance le premier tour de jeu}
+	 * Affiche les allumettes,
+	 * le premier joueur a devoir jouer,
+	 * lance le premier tour de jeu
 	 */
 	public void initialisation(UUID uuid) {
 		try {
 			this.idPartie = uuid;
 			
-			afficheAllumettes(interfaceAllumettes.getPartieAllumettes(uuid).getNbAllumettes());
+			afficheAllumettes( interfaceAllumettes.getNbAllumettes(uuid) );
 			
 			affPremierJoueur(interfaceAllumettes.nomJoueurTour(uuid));
 			
@@ -48,13 +48,13 @@ public class AllumetteControleur {
 	}
 	
 	/**
-	 * {@code Ex�cute un tour de jeu} 
+	 * Execute un tour de jeu
 	 */
 	private void tour() {
 		try {
 			affTourJoueur(interfaceAllumettes.nomJoueurTour(this.idPartie));
 			
-			if (interfaceAllumettes.getPartieAllumettes(this.idPartie).getTour()%2 == 0) {
+			if ( interfaceAllumettes.getTour(idPartie) %2 == 0) {
 				new Thread(() -> {
 					try {
 						for (Node node : pane.getChildren().filtered(t->t.isVisible())) {
@@ -64,13 +64,13 @@ public class AllumetteControleur {
 						Thread.sleep(800);
 						//Le serveur choisit un nombre d'allumettes
 						try {
-							nbAllChoisies = interfaceAllumettes.coupIA(this.idPartie);
+							this.nbAllChoisies = interfaceAllumettes.coupIA(this.idPartie);
 						} catch (RemoteException e) {
 							e.printStackTrace();
 						}
 						
 						//Choix des allumettes sur l'interface graphique
-						tourIA(nbAllChoisies);
+						tourIA(this.nbAllChoisies);
 						
 						//actualisation de l'affichage
 						Platform.runLater(new Runnable() {
@@ -98,7 +98,7 @@ public class AllumetteControleur {
 	}
 
 	/**
-	 * {@code Cr�er et affiche le nombre d'allumettes sp�cifi�}
+	 * Creer et affiche le nombre d'allumettes specifie
 	 * @param nbAllumette Le nombre d'allumettes de la partie
 	 */
 	private void afficheAllumettes(int nbAllumette) {
@@ -127,26 +127,26 @@ public class AllumetteControleur {
 	
 	
 	/**
-	 * {@code Affiche une alerte du premier jouer � devoir jouer}
+	 * Affiche une alerte du premier jouer e devoir jouer
 	 * @param nomPJoueur Le nom du premier joueur
 	 */
 	private void affPremierJoueur(String nomPJoueur) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Premier joueur");
-		alert.setContentText("Le premier joueur � jouer est : " + nomPJoueur);
+		alert.setContentText("Le premier joueur e jouer est : " + nomPJoueur);
 		alert.showAndWait();
 	}
 	
 	
 	/**
-	 * {@code S�lectionne les nbAlluChoisies premi�res allumettes disponibles}
+	 * Selectionne les nbAlluChoisies premieres allumettes disponibles
 	 * @param nbAlluChoisies Le nombre d'allumettes choisies
 	 */
 	private void tourIA(int nbAlluChoisies) {
-		//Liste de toutes les allumettes pas encore selectionn�es
+		//Liste de toutes les allumettes pas encore selectionnees
 		ObservableList<Node> alluVisibles = pane.getChildren().filtered(t->t.isVisible());
 		
-		//on s�lectionne les "nbAllChoisies" premi�res allumettes
+		//on selectionne les "nbAllChoisies" premieres allumettes
 		for (int i=0; i<nbAlluChoisies; i++) {
 			tabAllumetteRetirer[i] = alluVisibles.get(i);
 		}
@@ -154,18 +154,18 @@ public class AllumetteControleur {
 	
 	
 	/**
-	 * {@code Affiche le tableau des scores}
+	 * Affiche le tableau des scores
 	 * @param tabScore Le tableau des scores
 	 */
 	private void affTabScore(int[] tabScore) {
-		//On affiche le tableau des scores actualis�
+		//On affiche le tableau des scores actualise
 		lbl_scoreJ1.setText(String.valueOf(tabScore[0]));
 		lbl_scoreJ2.setText(String.valueOf(tabScore[1]));
 	}
 
 	
 	/**
-	 * {@code Affiche le nom du joueur qui doit jouer}
+	 * Affiche le nom du joueur qui doit jouer
 	 * @param nomJoueur Le nom du joueur
 	 */
 	private void affTourJoueur(String nomJoueur) {
@@ -173,18 +173,18 @@ public class AllumetteControleur {
 	}
 	
 	/**
-	 * {@code S�lectionne ou d�s�lectionne une allumette lorsque l'on clique dessus}
+	 * Selectionne ou deselectionne une allumette lorsque l'on clique dessus
 	 * @param event
 	 */
 	@FXML
 	private void choixAllumette(ActionEvent event) {
-		//On recup�re la Node sur laquelle on a cliqu�
+		//On recupere la Node sur laquelle on a clique
 		final Node source = (Node) event.getSource();
 		
-		//Si on a d�j� modifi� son style, donc != "", alors �a veut dire qu'on a d�j� cliqu� dessus
+		//Si on a deje modifie son style, donc != "", alors ea veut dire qu'on a deje clique dessus
 		if (source.getStyle() == "") {
-			//Comme on ne peut choisir que 2 allumettes max, on ne s�lectionne cette allumette que si nbAllChoisies != 2
-			//Si on la choisie, on la rajoute dans un tableau, on modifie son style et on incr�mente nbAllChoisies
+			//Comme on ne peut choisir que 2 allumettes max, on ne selectionne cette allumette que si nbAllChoisies != 2
+			//Si on la choisie, on la rajoute dans un tableau, on modifie son style et on incremente nbAllChoisies
 			if (nbAllChoisies != 2) {
 				nbAllChoisies += 1;
 				if (tabAllumetteRetirer[0] == null)
@@ -195,7 +195,7 @@ public class AllumetteControleur {
 				source.setStyle("-fx-background-color: red;");
 			}
 		}
-		//Si on a d�j� cliqu� dessus, on la retire du tableau, on remet le style de base et on d�cr�mente nbALLChoisies
+		//Si on a deje clique dessus, on la retire du tableau, on remet le style de base et on decremente nbALLChoisies
 		else {
 			nbAllChoisies -= 1;
 			if (tabAllumetteRetirer[0] != null) {
@@ -210,7 +210,7 @@ public class AllumetteControleur {
 			source.setStyle("");
 		}
 		
-		//Si aucune allumette n'est s�lectionn�e, alors le bouton Valider n'est pas actif
+		//Si aucune allumette n'est selectionnee, alors le bouton Valider n'est pas actif
 		if ( (tabAllumetteRetirer[0] != null) || (tabAllumetteRetirer[1] != null) )
 			btn_valider.setDisable(false);
 		else
@@ -218,40 +218,40 @@ public class AllumetteControleur {
 	}
 	
 	/**
-	 * {@code affiche une alerte d'aide}
+	 * affiche une alerte d'aide
 	 */
 	@FXML
 	private void aide() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Aide");
-		alert.setContentText("Le jeu des allumettes ! \n    Un tas d'allumettes est dispos� sur la table, il y en a un nombre impair."
-				+ "\n    Chaque joueur prend, tour � tour, 1 ou 2 allumettes dans le tas (vous pouvez essayez de tricher �a ne fonctionnera pas !"
-				+ " La partie se termine quand il n'y a plus d'allumettes sur la table. Le gagant est celui qui aura un nombre impair d'allumettes � la fin !"
-				+ "\n    Le nombre d'allumettes de d�part est al�atoire, tout comme le joueur qui commence. Que le meilleur gagne !"
-				+ "\n\nComment jouer ? \n    Mais c'est tr�s simple jammy ! Il suffit de cliquer sur une allumette pr�sente sur la table pour la s�lectionner !"
-				+ "\n    Pour valider votre s�lection il suffit de cliquer sur le bouton \"Valider\". ");
+		alert.setContentText("Le jeu des allumettes ! \n    Un tas d'allumettes est dispose sur la table, il y en a un nombre impair."
+				+ "\n    Chaque joueur prend, tour e tour, 1 ou 2 allumettes dans le tas (vous pouvez essayez de tricher ea ne fonctionnera pas !"
+				+ " La partie se termine quand il n'y a plus d'allumettes sur la table. Le gagant est celui qui aura un nombre impair d'allumettes e la fin !"
+				+ "\n    Le nombre d'allumettes de depart est aleatoire, tout comme le joueur qui commence. Que le meilleur gagne !"
+				+ "\n\nComment jouer ? \n    Mais c'est tres simple jammy ! Il suffit de cliquer sur une allumette presente sur la table pour la selectionner !"
+				+ "\n    Pour valider votre selection il suffit de cliquer sur le bouton \"Valider\". ");
 		
 		alert.showAndWait();
 	}
 	
 	/**
-	 * {@code Appel�e lors du clic sur le bouton "btn_valider",
-	 * actualise les donn�es serveur en fonction du nombre d'allumettes choisies,
+	 * Appelee lors du clic sur le bouton "btn_valider",
+	 * actualise les donnees serveur en fonction du nombre d'allumettes choisies,
 	 * actualise le tableau des scores,
-	 * retire les allumettes s�lectionn�es de l'affichage,
-	 * relance un tour de jeu si la partie n'est pas finie}
+	 * retire les allumettes selectionnees de l'affichage,
+	 * relance un tour de jeu si la partie n'est pas finie
 	 */
 	@FXML
 	private void valider() {
 		
 		try {
-			//actualisation des donn�es sur le serveur
-			interfaceAllumettes.action(this.idPartie, nbAllChoisies);
+			//actualisation des donnees sur le serveur
+			interfaceAllumettes.action(this.idPartie, this.nbAllChoisies);
 			
 			//Actualisation des scores
-			affTabScore(interfaceAllumettes.getPartieAllumettes(this.idPartie).getTabScore());
+			affTabScore( interfaceAllumettes.getTabScore(idPartie));
 			
-			//On retire les allumettes s�lectionn�es de l'affichage
+			//On retire les allumettes selectionnees de l'affichage
 			for (int i=0; i<tabAllumetteRetirer.length; i++) {
 				if (tabAllumetteRetirer[i] != null) {
 					tabAllumetteRetirer[i].setVisible(false);
@@ -259,11 +259,11 @@ public class AllumetteControleur {
 				}
 			}
 			
-			if (interfaceAllumettes.getPartieAllumettes(this.idPartie).getNbAllumettes() == 0) {
+			if ( interfaceAllumettes.getNbAllumettes(idPartie) == 0) {
 				finPartie(interfaceAllumettes.nomGagnant(this.idPartie), interfaceAllumettes.scoreGagnant(this.idPartie));
 			}
 			else {
-				//On r�initialise les variables n�cessaires � un tour de jeu
+				//On reinitialise les variables necessaires e un tour de jeu
 				nbAllChoisies = 0;
 				
 				tour();
@@ -275,7 +275,7 @@ public class AllumetteControleur {
 	}
 	
 	/**
-	 * {@code Ferme la fen�tre de jeu}
+	 * Ferme la fenetre de jeu
 	 */
 	@FXML
 	public void retour() {
@@ -286,7 +286,7 @@ public class AllumetteControleur {
 	}
 	
 	/**
-	 * {@code Affiche une alerte de fin de partie avec le gagnant et son score. Ferme ensuite la fen�tre}
+	 * Affiche une alerte de fin de partie avec le gagnant et son score. Ferme ensuite la fenetre
 	 * @param nomGagnant Le nom du joueur gagnant
 	 * @param scoreGagnant Le score du joueur gagnant
 	 */
