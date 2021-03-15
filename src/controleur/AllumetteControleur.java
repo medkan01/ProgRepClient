@@ -42,7 +42,7 @@ public class AllumetteControleur implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		try {
-			this.interfaceAllumettes = (InterfaceAllumettes) Naming.lookup ("rmi://localhost:3000/allumettes");
+			this.interfaceAllumettes = (InterfaceAllumettes) Naming.lookup ("rmi://localhost:3000/Allumettes");
 			
 			this.idPartie = this.interfaceAllumettes.creerPartie();
 			
@@ -286,9 +286,17 @@ public class AllumetteControleur implements Initializable {
 	
 	/**
 	 * Ferme la fenetre de jeu
+	 * @throws Exception 
 	 */
 	@FXML
-	public void retour() {
+	public void retour() throws Exception {
+		try {
+			if (!this.interfaceAllumettes.finPartie(idPartie))
+				throw new Exception("Erreur lors de la fermeture de la fenêtre");
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
 	    Stage stage = (Stage) btn_retour.getScene().getWindow();
 	    stage.close();
 	}
@@ -304,6 +312,10 @@ public class AllumetteControleur implements Initializable {
 		alert.setContentText("Fin de la partie ! Le gagnant est " + nomGagnant + " avec un score de " + scoreGagnant );
 		
 		alert.showAndWait();
-		retour();
+		try {
+			retour();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

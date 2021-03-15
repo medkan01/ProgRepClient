@@ -77,4 +77,12 @@ public interface InterfaceAllumettes extends Remote {
 	 * @throws RemoteException
 	 */
 	public int coupIA(UUID uuid) throws RemoteException;
+	
+	/**
+	 * Supprime la partie ciblée de la liste des parties
+	 * @param uuid
+	 * @return
+	 * @throws RemoteException
+	 */
+	public boolean finPartie(UUID uuid) throws RemoteException;
 }

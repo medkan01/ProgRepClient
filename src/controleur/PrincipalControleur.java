@@ -66,7 +66,11 @@ public class PrincipalControleur {
 		AllumetteControleur allumetteControleur = fxmlLoader.getController();
 		
 		nStage.setOnCloseRequest(event -> {
-			allumetteControleur.retour();
+			try {
+				allumetteControleur.retour();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
 		
 		nStage.show();
