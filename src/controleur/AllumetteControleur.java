@@ -75,6 +75,7 @@ public class AllumetteControleur implements Initializable {
 						for (Node node : pane.getChildren().filtered(t->t.isVisible())) {
 							node.setDisable(true);
 						}
+						this.btn_valider.setDisable(true);
 						
 						Thread.sleep(800);
 						//Le serveur choisit un nombre d'allumettes
@@ -98,6 +99,8 @@ public class AllumetteControleur implements Initializable {
 						for (Node node : pane.getChildren().filtered(t->t.isVisible())) {
 							node.setDisable(false);
 						}
+						this.btn_valider.setDisable(false);
+						
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
