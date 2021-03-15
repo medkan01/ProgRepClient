@@ -5,7 +5,7 @@ import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Client extends Application{
@@ -15,7 +15,7 @@ public class Client extends Application{
             URL fxmlURL=getClass().getResource("../vue/MenuPrincipalVue.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(fxmlURL);
             Node root = fxmlLoader.load();
-            Scene scene = new Scene((AnchorPane) root, 720, 480);
+            Scene scene = new Scene((VBox) root, 720, 480);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Accueil");
             primaryStage.show();
@@ -23,5 +23,9 @@ public class Client extends Application{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
