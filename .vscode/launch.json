@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "client.Client",
             "projectName": "ProgRepClient_a8d22bb7",
-            "args": ["localhost", "3000"],
+            "args": ["localhost","3000"],
             "vmArgs": "--module-path \"lib\\javafx-sdk-11.0.2\\lib\" --add-modules=javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
         }
     ]

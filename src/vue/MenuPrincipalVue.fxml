@@ -5,8 +5,8 @@
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.PrincipalControleur">
    <children>
-      <Button mnemonicParsing="false" text="jeu 1" />
-      <Button fx:id="btn_allumette" mnemonicParsing="false" onAction="#allumette" text="allumette" />
-      <Button fx:id="btn_pendu" mnemonicParsing="false" onAction="#pendu" text="pendu" />
+      <Button fx:id="btn_allumette" mnemonicParsing="false" onAction="#allumette" text="Allumettes" />
+      <Button fx:id="btn_pendu" mnemonicParsing="false" onAction="#pendu" text="Pendu" />
+      <Button fx:id="btn_ticTacToe" mnemonicParsing="false" onAction="#ticTacToe" text="Tic-Tac-Toe" />
    </children>
 </VBox>

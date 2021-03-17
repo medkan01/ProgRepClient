@@ -16,9 +16,10 @@ import javafx.stage.Stage;
 
 // UI client
 public class PrincipalControleur {
-	
+
 	@FXML private Button btn_allumette;
 	@FXML private Button btn_pendu;
+	@FXML private Button btn_ticTacToe;
 	
 	@FXML
 	public void pendu() {
@@ -72,6 +73,29 @@ public class PrincipalControleur {
 				e.printStackTrace();
 			}
 		});
+		
+		nStage.show();
+	}
+
+	@FXML
+	public void ticTacToe() {
+		Stage nStage = new Stage();
+		
+		URL fxmlURL=getClass().getResource("../vue/TicTacToeVue.fxml");
+		FXMLLoader fxmlLoader = new FXMLLoader(fxmlURL);
+		Node root = null;
+		try {
+			root = fxmlLoader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//On affiche la fenetre du jeu des allumettes
+		Scene scene = new Scene((AnchorPane) root, 720, 480);
+		nStage.setScene(scene);
+		nStage.setResizable(false);
+		nStage.setTitle("Jeu du Tic-Tac-Toe");
+		nStage.initModality(Modality.APPLICATION_MODAL);
 		
 		nStage.show();
 	}
