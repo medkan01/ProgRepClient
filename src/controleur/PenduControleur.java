@@ -18,6 +18,9 @@ public class PenduControleur implements Initializable {
 
     @FXML private Label motAleatoire, lblChance;
     @FXML private Button btnQuitter;
+    @FXML private Button btnA, btnB, btnC, btnD, 
+        btnE, btnF, btnG, btnH, btnI, btnJ, btnK, btnL, btnM, btnN, btnO, 
+        btnP, btnQ, btnR, btnS, btnT, btnU, btnV, btnW, btnX, btnY, btnZ; 
     private String mot;
     private char[] lettres = new char[26];
     private int nbChance;
@@ -33,6 +36,7 @@ public class PenduControleur implements Initializable {
             this.mot = pendu.motAleatoire();
             this.motAleatoire.setText(pendu.changeMot(this.mot, this.lettres));
             this.motAleatoire.setTextFill(Color.BLACK);
+            disableLettres(false);
             System.out.println("Chargement de la page..");
             
         } catch (Exception e) {
@@ -46,81 +50,107 @@ public class PenduControleur implements Initializable {
         switch(source) {
             case "btnA":
                 lettre = 'a';
+                btnA.setDisable(true);
                 break;
             case "btnB":
                 lettre = 'b';
+                btnB.setDisable(true);
                 break;
             case "btnC":
                 lettre = 'c';
+                btnC.setDisable(true);
                 break;
             case "btnD":
                 lettre = 'd';
+                btnD.setDisable(true);
                 break;
             case "btnE":
                 lettre = 'e';
+                btnE.setDisable(true);
                 break;
             case "btnF":
                 lettre = 'f';
+                btnF.setDisable(true);
                 break;
             case "btnG":
                 lettre = 'g';
+                btnG.setDisable(true);
                 break;
             case "btnH":
                 lettre = 'h';
+                btnH.setDisable(true);
                 break;
             case "btnI":
                 lettre = 'i';
+                btnI.setDisable(true);
                 break;
             case "btnJ":
                 lettre = 'j';
+                btnJ.setDisable(true);
                 break;
             case "btnK":
                 lettre = 'k';
+                btnK.setDisable(true);
                 break;
             case "btnL":
                 lettre = 'l';
+                btnL.setDisable(true);
                 break;
             case "btnM":
                 lettre = 'm';
+                btnM.setDisable(true);
                 break;
             case "btnN":
                 lettre = 'n';
+                btnN.setDisable(true);
                 break;
             case "btnO":
                 lettre = 'o';
+                btnO.setDisable(true);
                 break;
             case "btnP":
                 lettre = 'p';
+                btnP.setDisable(true);
                 break;
             case "btnQ":
                 lettre = 'q';
+                btnQ.setDisable(true);
                 break;
             case "btnR":
                 lettre = 'r';
+                btnR.setDisable(true);
                 break;
             case "btnS":
                 lettre = 's';
+                btnS.setDisable(true);
                 break;
             case "btnT":
                 lettre = 't';
+                btnT.setDisable(true);
                 break;
             case "btnU":
                 lettre = 'u';
+                btnU.setDisable(true);
                 break;
             case "btnV":
                 lettre = 'v';
+                btnV.setDisable(true);
                 break;
             case "btnW":
                 lettre = 'w';
+                btnW.setDisable(true);
                 break;
             case "btnX":
                 lettre = 'x';
+                btnX.setDisable(true);
                 break;
             case "btnY":
                 lettre = 'y';
+                btnY.setDisable(true);
                 break;
             case "btnZ":
                 lettre = 'z';
+                btnZ.setDisable(true);
                 break;
             default:
                 lettre = '0';
@@ -138,10 +168,11 @@ public class PenduControleur implements Initializable {
             if(nbChance == 0){
                 this.motAleatoire.setText("Perdu! Le mot était " + this.mot);
                 this.motAleatoire.setTextFill(Color.RED);
-            }
-            if(!this.motAleatoire.getText().contains("_")){
+                disableLettres(true);
+            } else if(!this.motAleatoire.getText().contains("_")){
                 this.motAleatoire.setText("Gagné! Le mot était " + this.mot);
                 this.motAleatoire.setTextFill(Color.GREEN);
+                disableLettres(true);
             }
         }
     }
@@ -153,10 +184,40 @@ public class PenduControleur implements Initializable {
         this.motAleatoire.setText(pendu.changeMot(this.mot, this.lettres));
         this.motAleatoire.setTextFill(Color.BLACK);
         this.lblChance.setText("Chances restantes : " + this.nbChance);
+        disableLettres(false);
     }
 
     public void quitterPendu() {
         Stage fenetre = (Stage) btnQuitter.getScene().getWindow();
         fenetre.close();
+    }
+
+    public void disableLettres(boolean arg){
+        btnA.setDisable(arg);
+        btnB.setDisable(arg);
+        btnC.setDisable(arg);
+        btnD.setDisable(arg);
+        btnE.setDisable(arg);
+        btnF.setDisable(arg);
+        btnG.setDisable(arg);
+        btnH.setDisable(arg);
+        btnI.setDisable(arg);
+        btnJ.setDisable(arg);
+        btnK.setDisable(arg);
+        btnL.setDisable(arg);
+        btnM.setDisable(arg);
+        btnN.setDisable(arg);
+        btnO.setDisable(arg);
+        btnP.setDisable(arg);
+        btnQ.setDisable(arg);
+        btnR.setDisable(arg);
+        btnS.setDisable(arg);
+        btnT.setDisable(arg);
+        btnU.setDisable(arg);
+        btnV.setDisable(arg);
+        btnW.setDisable(arg);
+        btnX.setDisable(arg);
+        btnY.setDisable(arg);
+        btnZ.setDisable(arg);
     }
 }
