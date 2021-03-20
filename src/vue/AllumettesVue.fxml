@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.AllumetteControleur">
+<VBox fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.AllumetteControleur">
    <children>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="600.0">
          <children>
@@ -34,7 +34,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label text="Ordinateur :">
+            <Label fx:id="lbl_j1">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
@@ -42,14 +42,14 @@
             <Label fx:id="lbl_scoreJ1" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" text="0" />
             <Label text="|" />
             <Label fx:id="lbl_scoreJ2" alignment="CENTER_RIGHT" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" text="0" />
-            <Label text=": Vous">
+            <Label fx:id="lbl_j2">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </Label>
          </children>
       </HBox>
-      <HBox fx:id="pane" alignment="CENTER" prefHeight="208.0" prefWidth="600.0" spacing="15.0" />
+      <HBox fx:id="boxAllumettes" alignment="CENTER" prefHeight="208.0" prefWidth="600.0" spacing="15.0" />
       <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="600.0">
          <children>
             <Button fx:id="btn_aide" mnemonicParsing="false" onAction="#aide" text="Aide">
@@ -58,7 +58,7 @@
                </HBox.margin>
             </Button>
             <Button fx:id="btn_retour" mnemonicParsing="false" onAction="#retour" text="Retour" />
-            <Label text="Cliquez sur une allumette pour la sélectionner / désélectionner">
+            <Label text="Cliquez sur une allumette pour la sÃ©lectionner / dÃ©sÃ©lectionner">
                <font>
                   <Font name="System Italic" size="12.0" />
                </font>
