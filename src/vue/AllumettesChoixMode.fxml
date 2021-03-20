@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0" spacing="10.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.AllumettesChoixModeControleur">
+   <children>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
+         <children>
+            <Button fx:id="solo" mnemonicParsing="false" onAction="#click" text="Solo" />
+            <Button fx:id="duo" mnemonicParsing="false" onAction="#click" text="Duo" />
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" prefHeight="75.0" prefWidth="100.0">
+         <children>
+            <Label text="Sélectionnez votre nom de joueur">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tf_nomJoueur" onKeyReleased="#verifNomJoueur">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </TextField>
+         </children>
+      </VBox>
+      <Label fx:id="lbl" text="En attente d'un joueur ...">
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>
