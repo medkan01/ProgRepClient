@@ -49,7 +49,7 @@ public class PrincipalControleur {
 	public void allumette() {
 		Stage nStage = new Stage();
 		
-		URL fxmlURL=getClass().getResource("../vue/AllumettesVue.fxml");
+		URL fxmlURL=getClass().getResource("../vue/AllumettesChoixMode.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(fxmlURL);
 		Node root = null;
 		try {
@@ -59,20 +59,11 @@ public class PrincipalControleur {
 		}
 		
 		//On affiche la fenetre du jeu des allumettes
-		Scene scene = new Scene((VBox) root, 600, 400);
+		Scene scene = new Scene((VBox) root, 200, 150);
 		nStage.setScene(scene);
 		nStage.setResizable(false);
-		nStage.setTitle("Jeu des allumettes");
+		nStage.setTitle("Choix du mode de jeu");
 		nStage.initModality(Modality.APPLICATION_MODAL);
-		AllumetteControleur allumetteControleur = fxmlLoader.getController();
-		
-		nStage.setOnCloseRequest(event -> {
-			try {
-				allumetteControleur.retour();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
 		
 		nStage.show();
 	}
