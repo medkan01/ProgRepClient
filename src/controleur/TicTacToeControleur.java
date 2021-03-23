@@ -1,21 +1,18 @@
 package controleur;
 
-import java.net.URL;
 import java.rmi.Naming;
 import java.util.Random;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import modele.interfaceRMI.InterfaceTicTacToe;
 
-public class TicTacToeControleur implements Initializable {
+public class TicTacToeControleur {
     private int taille = 3;
     private String[][] coord = new String[taille][taille];
-    private String hote = "localhost";
-    private String port = "3000";
+    private String hote;
+    private String port;
     private InterfaceTicTacToe tic;
     private String[] joueurs = new String[2];
     private int joueur;
@@ -23,7 +20,7 @@ public class TicTacToeControleur implements Initializable {
     @FXML private Button btn00, btn01, btn02, btn10, btn11, btn12, btn20, btn21, btn22, btnQuitter, btnRecommencer;
     @FXML private Label lblPartie;
 
-    public void initialize(URL arg0, ResourceBundle arg1) {
+    public void initialise() {
         try{
             tic = (InterfaceTicTacToe) Naming.lookup("rmi://" + hote + ":" + port + "/TicTacToe");
             joueurs[0] = "O";
@@ -250,7 +247,7 @@ public class TicTacToeControleur implements Initializable {
                 lblPartie.setText("Tour du joueur " + joueur + " Symbole [" + joueurs[joueur] + "]");
             }
         } else {
-            lblPartie.setText("Egalité !");
+            lblPartie.setText("EgalitÃ© !");
         }
     }
  
@@ -268,7 +265,7 @@ public class TicTacToeControleur implements Initializable {
             setDisableAllButton(false);
             coord = tic.initialiserCoord(this.taille);
             joueur = (new Random()).nextInt(2);
-            lblPartie.setText("Début de la partie. Tour du joueur " + joueur + " Symbole [" + joueurs[joueur] + "]");
+            lblPartie.setText("DÃ©but de la partie. Tour du joueur " + joueur + " Symbole [" + joueurs[joueur] + "]");
         } catch(Exception e) {
             lblPartie.setText(e.getMessage());
         }
@@ -289,5 +286,10 @@ public class TicTacToeControleur implements Initializable {
         btn20.setDisable(arg);
         btn21.setDisable(arg);
         btn22.setDisable(arg);
+    }
+
+    public void setParametres(String hote, String port) {
+    	this.hote = hote;
+    	this.port = port;
     }
 }

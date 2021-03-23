@@ -1,19 +1,14 @@
 package controleur;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.ResourceBundle;
 import java.util.UUID;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -32,7 +27,7 @@ import javafx.stage.Stage;
 import modele.Pair;
 import modele.interfaceRMI.InterfaceAllumettes;
 
-public class MultiAllumettesControleur implements Initializable {
+public class MultiAllumettesControleur {
 	
 	@FXML private TableView<Pair> tabParties;
 	@FXML private TableColumn<Pair, String> idCol;
@@ -47,24 +42,13 @@ public class MultiAllumettesControleur implements Initializable {
 	@FXML private TextField tf_joueur;
 	
 	private String nomJoueur;
-	private InterfaceAllumettes allumettes;
+	private InterfaceAllumettes iAllumettes;
 	
 	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialise() {
 		this.idCol.setCellValueFactory(new PropertyValueFactory<Pair, String>("uuid"));
 		this.joueurCol.setCellValueFactory(new PropertyValueFactory<Pair, String>("joueur"));
 		this.btn_rejoindre.setDisable(true);
-		
-		try {
-			this.allumettes = (InterfaceAllumettes) Naming.lookup("rmi://localhost:3000/Allumettes");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
 		
 		//Listener qui definit si les boutons sont desactives ou non
 		this.tabParties.getSelectionModel().selectedItemProperty().addListener(
@@ -94,7 +78,7 @@ public class MultiAllumettesControleur implements Initializable {
 		try {
 			ObservableList<Pair> data = FXCollections.observableArrayList();
 
-			allumettes.getJoueursParties().forEach((k,v) -> {
+			iAllumettes.getJoueursParties().forEach((k,v) -> {
 				if (k != key)
 					data.add(new Pair(k.toString(), v));
 			});
@@ -114,8 +98,8 @@ public class MultiAllumettesControleur implements Initializable {
 		UUID uuid = UUID.fromString(tabParties.getSelectionModel().getSelectedItem().getUuid());
 		
 		try {
-			if (allumettes.getNbJoueurs(uuid) != 2) {
-				allumettes.rejoindrePartie(uuid, nomJoueur);
+			if (iAllumettes.getNbJoueurs(uuid) != 2) {
+				iAllumettes.rejoindrePartie(uuid, nomJoueur);
 				
 				Stage nStage = new Stage();
 				
@@ -138,7 +122,7 @@ public class MultiAllumettesControleur implements Initializable {
 				
 				AllumetteControleur allumetteControleur = fxmlLoader.getController();
 				
-				allumetteControleur.setInterfaceAllumettes(allumettes);
+				allumetteControleur.setInterfaceAllumettes(iAllumettes);
 				allumetteControleur.initialisation(uuid, 1);
 				
 				nStage.setOnCloseRequest(e -> {
@@ -147,7 +131,7 @@ public class MultiAllumettesControleur implements Initializable {
 				
 				nStage.showAndWait();
 				
-				allumettes.finPartie(uuid);
+				iAllumettes.finPartie(uuid);
 			}
 			else {
 				Alert alert = new Alert(AlertType.INFORMATION);
@@ -174,8 +158,8 @@ public class MultiAllumettesControleur implements Initializable {
 	@FXML
 	private void creer() {
 		try {
-			UUID uuid = allumettes.creerPartie(nomJoueur);
-			allumettes.initialise(uuid, "duo", this.nomJoueur);
+			UUID uuid = iAllumettes.creerPartie(nomJoueur);
+			iAllumettes.initialise(uuid, "duo", this.nomJoueur);
 			
 			Stage nStage = new Stage();
 			
@@ -197,7 +181,7 @@ public class MultiAllumettesControleur implements Initializable {
 			
 			AllumetteControleur allumetteControleur = fxmlLoader.getController();
 			
-			allumetteControleur.setInterfaceAllumettes(allumettes);
+			allumetteControleur.setInterfaceAllumettes(iAllumettes);
 			allumetteControleur.initialisation(uuid, 0);
 			nStage.getIcons().add(new Image("/vue/icones/allumetteIco.png"));
 			
@@ -207,7 +191,7 @@ public class MultiAllumettesControleur implements Initializable {
 			
 			nStage.showAndWait();
 			
-			allumettes.finPartie(uuid);
+			iAllumettes.finPartie(uuid);
 		
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
@@ -233,7 +217,7 @@ public class MultiAllumettesControleur implements Initializable {
 		String id = this.tf_idPartie.getText().trim();
 		
 		try {
-			allumettes.getJoueursParties().forEach((k,v) -> {
+			iAllumettes.getJoueursParties().forEach((k,v) -> {
 				String key = k.toString();
 				for (int i=0; i<key.length(); i++) {
 					for (int j=i; j<key.length(); j++) {
@@ -247,6 +231,7 @@ public class MultiAllumettesControleur implements Initializable {
 			e.printStackTrace();
 		}
 		
+		tabParties.getItems().clear();
 		tabParties.setItems(listeParties);
 	}
 	
@@ -256,7 +241,7 @@ public class MultiAllumettesControleur implements Initializable {
 		String nomJoueur = this.tf_joueur.getText().trim();
 		
 		try {
-			allumettes.getJoueursParties().forEach((k,v) -> {
+			iAllumettes.getJoueursParties().forEach((k,v) -> {
 				for (int i=0; i<v.length(); i++) {
 					for (int j=i; j<v.length(); j++) {
 						Pair aAjouter = new Pair(k.toString(), v);
@@ -272,5 +257,9 @@ public class MultiAllumettesControleur implements Initializable {
 		
 		tabParties.getItems().clear();
 		tabParties.setItems(listeParties);
+	}
+
+	public void setIAllumettes(InterfaceAllumettes iAllumettes) {
+		this.iAllumettes = iAllumettes;
 	}
 }

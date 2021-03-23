@@ -4,17 +4,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import modele.interfaceRMI.InterfacePendu;
 
-import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class PenduControleur implements Initializable {
+public class PenduControleur {
 
     @FXML private Label motAleatoire, lblChance;
     @FXML private Button btnQuitter;
@@ -24,11 +21,11 @@ public class PenduControleur implements Initializable {
     private String mot;
     private char[] lettres = new char[26];
     private int nbChance;
-    private String hote = "localhost";
-    private int port = 3000;
+    private String hote;
+    private String port;
     private InterfacePendu pendu;
 
-    public void initialize(URL arg0, ResourceBundle arg1) {
+    public void initialise() {
         try{
             this.nbChance = 15;
             this.lblChance.setText("Chances restantes : " + nbChance);
@@ -166,11 +163,11 @@ public class PenduControleur implements Initializable {
                 this.motAleatoire.setText(pendu.changeMot(mot, lettres));
             }
             if(nbChance == 0){
-                this.motAleatoire.setText("Perdu! Le mot était " + this.mot);
+                this.motAleatoire.setText("Perdu! Le mot Ã©tait " + this.mot);
                 this.motAleatoire.setTextFill(Color.RED);
                 disableLettres(true);
             } else if(!this.motAleatoire.getText().contains("_")){
-                this.motAleatoire.setText("Gagné! Le mot était " + this.mot);
+                this.motAleatoire.setText("GagnÃ©! Le mot Ã©tait " + this.mot);
                 this.motAleatoire.setTextFill(Color.GREEN);
                 disableLettres(true);
             }
@@ -219,5 +216,10 @@ public class PenduControleur implements Initializable {
         btnX.setDisable(arg);
         btnY.setDisable(arg);
         btnZ.setDisable(arg);
+    }
+
+    public void setParametres(String hote, String port) {
+    	this.hote = hote;
+    	this.port = port;
     }
 }

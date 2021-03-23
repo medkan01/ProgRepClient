@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import javafx.application.Application.Parameters;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -43,6 +44,9 @@ public class PrincipalControleur implements Initializable {
 	@FXML private Button btn_info_ticTacToe;
 	@FXML private Button btn_jouer_ticTacToe;
 	
+	private String hote;
+	private String port;
+	
 	
 	/**
 	 * Lance une partie de pendu
@@ -67,6 +71,10 @@ public class PrincipalControleur implements Initializable {
 		nStage.setTitle("Jeu du pendu");
 		nStage.initModality(Modality.APPLICATION_MODAL);
 		nStage.getIcons().add(new Image("/vue/icones/penduIco.png"));
+		
+		PenduControleur penduControleur = fxmlLoader.getController();
+		penduControleur.setParametres(hote, port);
+		penduControleur.initialise();
 		
 		nStage.show();
 	}
@@ -153,10 +161,8 @@ public class PrincipalControleur implements Initializable {
 	 */
 	@FXML
 	private void jouer_allumettes_solo() {
-		int port = 3000;
-		InterfaceAllumettes obj;
 		try {
-			obj = (InterfaceAllumettes) Naming.lookup ("rmi://localhost:" + port + "/Allumettes");
+			InterfaceAllumettes obj = (InterfaceAllumettes) Naming.lookup ("rmi://" + hote + ":" + port + "/Allumettes");
 			
 			UUID uuid = obj.creerPartie("solo");
 			obj.initialise(uuid, "solo", tf_nomJoueur.getText().trim());
@@ -230,8 +236,21 @@ public class PrincipalControleur implements Initializable {
 		nStage.initModality(Modality.APPLICATION_MODAL);
 		nStage.getIcons().add(new Image("/vue/icones/allumetteIco.png"));
 		
-		MultiAllumettesControleur multiAllumettesControleur = fxmlLoader.getController();
-		multiAllumettesControleur.setNomJoueur(this.tf_nomJoueur.getText().trim());
+		try {
+			MultiAllumettesControleur multiAllumettesControleur = fxmlLoader.getController();
+			multiAllumettesControleur.setNomJoueur(this.tf_nomJoueur.getText().trim());
+			
+			InterfaceAllumettes obj = (InterfaceAllumettes) Naming.lookup ("rmi://" + hote + ":" + port + "/Allumettes");
+			multiAllumettesControleur.setIAllumettes(obj);
+			multiAllumettesControleur.initialise();
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 		
 		nStage.showAndWait();
 	}
@@ -261,6 +280,10 @@ public class PrincipalControleur implements Initializable {
 		nStage.initModality(Modality.APPLICATION_MODAL);
 		nStage.getIcons().add(new Image("/vue/icones/tictactoeIco.png"));
 		
+		TicTacToeControleur ticTacToeControleur = fxmlLoader.getController();
+		ticTacToeControleur.setParametres(hote, port);
+		ticTacToeControleur.initialise();
+		
 		nStage.show();
 	}
 
@@ -269,6 +292,10 @@ public class PrincipalControleur implements Initializable {
 		this.box_info_allumettes.setVisible(false);
 		this.box_info_pendu.setVisible(false);
 		this.box_info_tic_tac_toe.setVisible(false);
-		
+	}
+	
+	public void setParameters(Parameters parametres) {
+		this.hote = parametres.getRaw().get(0);
+		this.port = parametres.getRaw().get(1);
 	}
 }
