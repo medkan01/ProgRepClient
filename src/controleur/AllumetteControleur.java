@@ -15,7 +15,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class AllumetteControleur {
@@ -23,7 +22,6 @@ public class AllumetteControleur {
 	@FXML private Button btn_valider;
 	@FXML private Button btn_retour;
 	
-	@FXML private VBox parent;
 	@FXML private HBox boxAllumettes;
 	
 	@FXML private Label lbl_scoreJ1;
@@ -84,7 +82,7 @@ public class AllumetteControleur {
 	private Thread threadAttenteJoueurs() {
 		return new Thread(() -> {
 			try {
-				parent.setDisable(true);
+				this.btn_valider.setDisable(true);
 				
 				while (iAllumettes.getNbJoueurs(idPartie) != 2)
 					Thread.sleep(500);
@@ -205,7 +203,7 @@ public class AllumetteControleur {
 				//action du serveur
 				if ( iAllumettes.getTour(idPartie)%2 == 1 && iAllumettes.getMode(idPartie).equals("solo")) {
 					//Action du serveur
-					parent.setDisable(true);
+					affichageAttente(true);
 				
 					Thread.sleep(800);
 
@@ -214,7 +212,7 @@ public class AllumetteControleur {
 					//Selection des allumettes disponibles par le serveur
 					tourIA(this.nbAllChoisies);
 					
-					parent.setDisable(false);
+					affichageAttente(false);
 					
 					//Comme nous sommes dans un nouveau thread, il nous faut utiliser runLater pour executer une fonction qui est dans l'autre thread
 					Platform.runLater(() -> {
@@ -222,7 +220,7 @@ public class AllumetteControleur {
 					});
 				}
 				else if (iAllumettes.getMode(idPartie).equals("duo")) {
-					parent.setDisable(true);
+					affichageAttente(true);
 					
 					//Attendre que l'adversaire ait joue
 					try {
@@ -244,13 +242,14 @@ public class AllumetteControleur {
 						Platform.runLater(() -> {
 							//Actualisation du tableau des scores
 							try {
+								affTourJoueur(iAllumettes.nomJoueurTour(idPartie));
 								affTabScore(iAllumettes.getTabScore(idPartie));
 							} catch (RemoteException e) {
 								e.printStackTrace();
 							}
 						});
 						
-						parent.setDisable(false);
+						affichageAttente(false);
 						
 					} catch (NullPointerException npe) {
 						Thread.currentThread().interrupt();
@@ -260,6 +259,11 @@ public class AllumetteControleur {
 				e.printStackTrace();
 			}
 		}).start();
+	}
+	
+	private void affichageAttente(boolean bool) {
+		this.btn_valider.setDisable(bool);
+		this.boxAllumettes.setDisable(bool);
 	}
 	
 	public void setInterfaceAllumettes(InterfaceAllumettes interfaceAllumettes) {

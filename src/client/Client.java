@@ -19,7 +19,7 @@ public class Client extends Application{
             Node root = fxmlLoader.load();
             Scene scene = new Scene((HBox) root, 720, 480);
             primaryStage.setScene(scene);
-            primaryStage.getIcons().add(new Image("/vue/icones/icon2.png"));
+            primaryStage.getIcons().add(new Image("/vue/icones/menuIco.png"));
             primaryStage.setTitle("Accueil");
             primaryStage.show();
             primaryStage.setResizable(false);
