@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.MultiAllumettesControleur">
+   <children>
+      <Label text="Liste des parties disponibles">
+         <VBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="130.0">
+         <children>
+            <TextField fx:id="tf_idPartie" onKeyReleased="#filtrerIdPartie" />
+            <TextField fx:id="tf_joueur" onKeyReleased="#filtrerJoueur" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
+      <TableView fx:id="tabParties" prefHeight="400.0" prefWidth="600.0">
+         <columns>
+            <TableColumn fx:id="idCol" prefWidth="299.0" text="identifiant" />
+            <TableColumn fx:id="joueurCol" minWidth="0.0" prefWidth="300.0" text="joueur" />
+         </columns>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </TableView>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
+         <children>
+            <Button fx:id="btn_rejoindre" mnemonicParsing="false" onAction="#rejoindre" text="Rejoindre" />
+            <Button fx:id="btn_retour" mnemonicParsing="false" onAction="#retour" text="Retour" />
+            <Button fx:id="btn_creer" mnemonicParsing="false" onAction="#creer" text="Creer une partie" />
+            <Button fx:id="btn_actualiser" mnemonicParsing="false" onAction="#actualiser" text="Actualiser" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

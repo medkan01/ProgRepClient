@@ -58,7 +58,7 @@
                </HBox.margin>
             </Button>
             <Button fx:id="btn_retour" mnemonicParsing="false" onAction="#retour" text="Retour" />
-            <Label text="Cliquez sur une allumette pour la sÃ©lectionner / dÃ©sÃ©lectionner">
+            <Label text="Cliquez sur une allumette pour la selectionner / deselectionner">
                <font>
                   <Font name="System Italic" size="12.0" />
                </font>

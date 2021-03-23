@@ -3,7 +3,6 @@ package controleur;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
 import modele.interfaceRMI.InterfaceAllumettes;
 import javafx.application.Platform;
@@ -46,7 +45,8 @@ public class AllumetteControleur {
 	
 	private Thread tVictoire;
 	private Thread tAttJoueurs = threadAttenteJoueurs();
-	private CountDownLatch readyThreadCounter;
+	
+	private boolean finTour = false;
 	
 	/**
 	 * Enregistre l'id de la partie, le numero du joueur associe a la fenetre. Si la partie est mode duo, attend que 2 joueurs soient connectes. Initialise l'affichage et debute un tour de jeu
@@ -106,7 +106,7 @@ public class AllumetteControleur {
 				tVictoire.start();
 				
 			} catch (RemoteException | InterruptedException e) {
-				e.printStackTrace();
+				System.out.println("Sleep interrupted, Sortie de la file d'attente");
 			}
 		});
 	}
@@ -119,9 +119,16 @@ public class AllumetteControleur {
 		return new Thread(() -> {
 			try {
 				while (iAllumettes.getNbAllumettes(idPartie) != 0) {
-					readyThreadCounter = new CountDownLatch(1);
+					finTour = false;
 					tour();
-					readyThreadCounter.await();
+					
+					while (!finTour) {
+						if (iAllumettes.getNbAllumettes(idPartie) == 0) {
+							finTour = true;
+							break;
+						}
+						Thread.sleep(500);
+					}
 				}
 				
 				Platform.runLater(() -> {
@@ -133,13 +140,7 @@ public class AllumetteControleur {
 				});
 				
 			} catch (RemoteException | InterruptedException e) {
-				Platform.runLater(() -> {
-					try {
-						finPartie(iAllumettes.nomGagnant(idPartie), iAllumettes.scoreGagnant(idPartie));
-					} catch (RemoteException e1) {
-						e1.printStackTrace();
-					}
-				});
+				System.out.println("Sleep interrupted, Fin de partie");
 			}
 		});
 	}
@@ -152,56 +153,37 @@ public class AllumetteControleur {
 		return new Thread(() -> {
 			try {
 				while (iAllumettes.getNbJoueurs(idPartie) == 2 && iAllumettes.getNbAllumettes(idPartie) != 0) {
-					readyThreadCounter = new CountDownLatch(1);
+					finTour = false;
 					tour();
-					readyThreadCounter.await();
+					
+					while (!finTour) {
+						if (iAllumettes.getNbJoueurs(idPartie) != 2 || iAllumettes.getNbAllumettes(idPartie) == 0) {
+							finTour = true;
+							break;
+						}
+						Thread.sleep(500);
+					}
 				}
 				
 				Platform.runLater(() -> {
 					try {
-						if (iAllumettes.getNbJoueurs(idPartie) != 2) {
-							String nomGagnant= null;
-							int i;
-							if (joueur == iAllumettes.getTour(idPartie)%2) {
-								nomGagnant = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie)) ? lbl_j2.getText().trim() : lbl_j1.getText().trim());
-								i = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie))) ? 1 : 0;
-							}
-							else {
-								nomGagnant = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie)) ? lbl_j1.getText().trim() : lbl_j2.getText().trim());
-								i = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie))) ? 0 : 1;
-							}
+						if (iAllumettes.getNbAllumettes(idPartie) == 0) {
+							finPartie(iAllumettes.nomGagnant(idPartie), iAllumettes.scoreGagnant(idPartie));
+						}
+						else {
+							String nomGagnant = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie)) ? lbl_j2.getText().trim() : lbl_j1.getText().trim());
+							int i = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie))) ? 1 : 0;
+
 							finPartieAbandon(nomGagnant, iAllumettes.getTabScore(idPartie)[i]);
 						}
-						else
-							finPartie(iAllumettes.nomGagnant(idPartie), iAllumettes.scoreGagnant(idPartie));
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
 				});
-			} catch (InterruptedException | RemoteException e) {
-				Platform.runLater(() -> {
-					try {
-						if (iAllumettes.getNbJoueurs(idPartie) != 2) {
-							String nomGagnant= null;
-							int i;
-							if (joueur == iAllumettes.getTour(idPartie)%2) {
-								nomGagnant = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie)) ? lbl_j2.getText().trim() : lbl_j1.getText().trim());
-								i = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie))) ? 1 : 0;
-							}
-							else {
-								nomGagnant = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie)) ? lbl_j1.getText().trim() : lbl_j2.getText().trim());
-								i = (lbl_j1.getText().trim().equals(iAllumettes.nomJoueurTour(idPartie))) ? 0 : 1;
-							}
-							finPartieAbandon(nomGagnant, iAllumettes.getTabScore(idPartie)[i]);
-						}
-							
-						else
-							finPartie(iAllumettes.nomGagnant(idPartie), iAllumettes.scoreGagnant(idPartie));
-							
-					} catch (RemoteException e1) {
-						e1.printStackTrace();
-					}
-				});
+			} catch (InterruptedException e) {
+				System.out.println("Sleep interrupted, Fin de partie");
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -232,12 +214,12 @@ public class AllumetteControleur {
 					//Selection des allumettes disponibles par le serveur
 					tourIA(this.nbAllChoisies);
 					
+					parent.setDisable(false);
+					
 					//Comme nous sommes dans un nouveau thread, il nous faut utiliser runLater pour executer une fonction qui est dans l'autre thread
 					Platform.runLater(() -> {
 						valider();
 					});
-					
-					parent.setDisable(false);
 				}
 				else if (iAllumettes.getMode(idPartie).equals("duo")) {
 					parent.setDisable(true);
@@ -271,11 +253,7 @@ public class AllumetteControleur {
 						parent.setDisable(false);
 						
 					} catch (NullPointerException npe) {
-						Platform.runLater(() -> {
-							Stage stage = (Stage) btn_retour.getScene().getWindow();
-							stage.close();
-							Thread.currentThread().interrupt();
-						});
+						Thread.currentThread().interrupt();
 					}
 				}
 			} catch (RemoteException | InterruptedException e) {
@@ -325,7 +303,7 @@ public class AllumetteControleur {
 	private void affPremierJoueur(String nomPJoueur) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Premier joueur");
-		alert.setContentText("Le premier joueur e jouer est : " + nomPJoueur);
+		alert.setContentText("Le premier joueur a jouer est : " + nomPJoueur);
 		alert.showAndWait();
 	}
 	
@@ -417,7 +395,7 @@ public class AllumetteControleur {
 	@FXML
 	private void valider() {
 		try {
-			//Enregistrement des données de jeu sur le serveur
+			//Enregistrement des donnees de jeu sur le serveur
 			iAllumettes.action(this.idPartie, this.nbAllChoisies);
 			
 			//Actualisation du tableau des scores
@@ -435,7 +413,7 @@ public class AllumetteControleur {
 			
 			nbAllChoisies = 0;
 			
-			readyThreadCounter.countDown();
+			finTour = true;
 			
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -444,15 +422,15 @@ public class AllumetteControleur {
 	
 	
 	/**
-	 * appelle {@link modele.interfaceRMI.InterfaceAllumettes#finPartie(UUID uuid)} puis ferme la fenetre de jeu
+	 * Ferme la fenetre de jeu
 	 */
 	@FXML
 	public void retour() {
-		try {
-			iAllumettes.finPartie(idPartie);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		if (tVictoire != null)
+			tVictoire.interrupt();
+		
+		if (!tAttJoueurs.isInterrupted())
+			tAttJoueurs.interrupt();
 		
 	    Stage stage = (Stage) btn_retour.getScene().getWindow();
 	    stage.close();
@@ -470,7 +448,9 @@ public class AllumetteControleur {
 		alert.setContentText("Fin de la partie ! Le gagnant est " + nomGagnant + " avec un score de " + scoreGagnant );
 		
 		alert.showAndWait();
-		retour();
+
+		Stage stage = (Stage) btn_retour.getScene().getWindow();
+	    stage.close();
 	}
 	
 	
@@ -485,6 +465,8 @@ public class AllumetteControleur {
 		alert.setContentText("Votre adversaire a ete deconnecte ou a abandonne ! Le gagnant est donc " + nomGagnant + " avec un score de " + scoreGagnant );
 		
 		alert.showAndWait();
-		retour();
+
+		Stage stage = (Stage) btn_retour.getScene().getWindow();
+	    stage.close();
 	}
 }
