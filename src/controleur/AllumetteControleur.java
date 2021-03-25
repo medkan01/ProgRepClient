@@ -29,6 +29,7 @@ public class AllumetteControleur {
 	@FXML private Label lbl_scoreJ2;
 	@FXML private Label lbl_j2;
 	@FXML private Label lbl_tour;
+	@FXML private Label lbl_attente;
 	
 	
 	private InterfaceAllumettes iAllumettes;
@@ -36,7 +37,7 @@ public class AllumetteControleur {
 	private UUID idPartie;
 	
 	private int nbAllChoisies = 0;
-	private int joueur;
+	private int numJoueur;
 	
 	private ArrayList<String> tabAllRetirerStr = new ArrayList<String>();
 	private ArrayList<Node> tabAllRetirer = new ArrayList<Node>();
@@ -54,14 +55,16 @@ public class AllumetteControleur {
 	public void initialisation(UUID uuid, int joueur) {
 		try {
 			this.idPartie = uuid;
-			this.joueur = joueur;
+			this.numJoueur = joueur;
 			
 			if (iAllumettes.getMode(uuid).equals("duo")) {
+				this.lbl_attente.setText("En attente d'un joueur");
+				this.lbl_attente.setStyle("-fx-font-style:italic");
 				tAttJoueurs.start();
 			}
 			else {
-				lbl_j1.setText(iAllumettes.getNJ1(uuid));
-				lbl_j2.setText(iAllumettes.getNJ2(uuid));
+				lbl_j1.setText(iAllumettes.getNJ1(uuid) + " ");
+				lbl_j2.setText(" " + iAllumettes.getNJ2(uuid));
 				
 				afficheAllumettes(iAllumettes.getNbAllumettes(uuid));
 				
@@ -89,12 +92,16 @@ public class AllumetteControleur {
 				
 				Platform.runLater(() -> {
 					try {
-						lbl_j1.setText(iAllumettes.getNJ1(idPartie));
-						lbl_j2.setText(iAllumettes.getNJ2(idPartie));
+						lbl_j1.setText(iAllumettes.getNJ1(idPartie) + " ");
+						lbl_j2.setText(" " + iAllumettes.getNJ2(idPartie));
 						
 						afficheAllumettes(iAllumettes.getNbAllumettes(idPartie));
 						
 						affPremierJoueur(iAllumettes.nomJoueurTour(idPartie));
+						
+						this.lbl_attente.setText("Tour du joueur : ");
+						this.lbl_attente.setStyle("-fx-font-style:normal");
+						
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
@@ -102,6 +109,8 @@ public class AllumetteControleur {
 				
 				tVictoire = threadMultiVictoire();
 				tVictoire.start();
+				
+				
 				
 			} catch (RemoteException | InterruptedException e) {
 				System.out.println("Sleep interrupted, Sortie de la file d'attente");
@@ -224,7 +233,7 @@ public class AllumetteControleur {
 					
 					//Attendre que l'adversaire ait joue
 					try {
-						while (this.joueur != iAllumettes.getTour(idPartie)%2) {
+						while (this.numJoueur != iAllumettes.getTour(idPartie)%2) {
 							try {
 								Thread.sleep(500);
 							} catch (InterruptedException e) {
@@ -307,7 +316,8 @@ public class AllumetteControleur {
 	private void affPremierJoueur(String nomPJoueur) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Premier joueur");
-		alert.setContentText("Le premier joueur a jouer est : " + nomPJoueur);
+		alert.setHeaderText(null);
+		alert.setContentText(nomPJoueur + " est le premier joueur a jouer");
 		alert.showAndWait();
 	}
 	
@@ -379,12 +389,13 @@ public class AllumetteControleur {
 	private void aide() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Aide");
-		alert.setContentText("Le jeu des allumettes ! \n    Un tas d'allumettes est dispose sur la table, il y en a un nombre impair."
-				+ "\n    Chaque joueur prend, tour e tour, 1 ou 2 allumettes dans le tas (vous pouvez essayez de tricher ea ne fonctionnera pas !"
-				+ " La partie se termine quand il n'y a plus d'allumettes sur la table. Le gagant est celui qui aura un nombre impair d'allumettes e la fin !"
-				+ "\n    Le nombre d'allumettes de depart est aleatoire, tout comme le joueur qui commence. Que le meilleur gagne !"
-				+ "\n\nComment jouer ? \n    Mais c'est tres simple jammy ! Il suffit de cliquer sur une allumette presente sur la table pour la selectionner !"
-				+ "\n    Pour valider votre selection il suffit de cliquer sur le bouton \"Valider\". ");
+		alert.setHeaderText(null);
+		alert.setContentText("Le jeu des allumettes ! \n\n    Un tas d'allumettes est dispose sur la table, il y en a un nombre impair."
+				+ "\n\n    Chaque joueur prend, tour a tour, 1 ou 2 allumettes dans le tas (vous pouvez essayez de tricher ca ne fonctionnera pas !"
+				+ " La partie se termine quand il n'y a plus d'allumettes sur la table. Le gagant est celui qui aura un nombre impair d'allumettes a la fin !"
+				+ "\n\n    Le nombre d'allumettes de depart est aleatoire, tout comme le joueur qui commence. Que le meilleur gagne !"
+				+ "\n\n\nComment jouer ? \n\n    Mais c'est tres simple jammy ! Il suffit de cliquer sur une allumette presente sur la table pour la selectionner !"
+				+ "\n\n    Pour valider votre selection il suffit de cliquer sur le bouton \"Valider\". ");
 		
 		alert.showAndWait();
 	}
@@ -449,6 +460,7 @@ public class AllumetteControleur {
 	private void finPartie(String nomGagnant, int scoreGagnant) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Fin de partie");
+		alert.setHeaderText(null);
 		alert.setContentText("Fin de la partie ! Le gagnant est " + nomGagnant + " avec un score de " + scoreGagnant );
 		
 		alert.showAndWait();
@@ -466,6 +478,7 @@ public class AllumetteControleur {
 	private void finPartieAbandon(String nomGagnant, int scoreGagnant) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Fin de partie");
+		alert.setHeaderText("Victoire !");
 		alert.setContentText("Votre adversaire a ete deconnecte ou a abandonne ! Le gagnant est donc " + nomGagnant + " avec un score de " + scoreGagnant );
 		
 		alert.showAndWait();

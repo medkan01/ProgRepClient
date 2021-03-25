@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.AllumetteControleur">
+<VBox fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-image: url(&quot;icones/fondAllumettes.png&quot;);" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controleur.AllumetteControleur">
    <children>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="600.0">
          <children>
@@ -20,7 +20,7 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Tour du joueur :">
+            <Label fx:id="lbl_attente" alignment="CENTER" contentDisplay="CENTER" text="Tour du joueur :">
                <font>
                   <Font size="16.0" />
                </font>
