@@ -36,7 +36,7 @@ If you are running this program on Visual Studio Code, you must have your config
             "projectName": "ProgRepClient",
             "args": [
                 "localhost",
-                "3000"
+                "the_port_you_want_to_use"
             ],
             "vmArgs": "--module-path \"lib\\javafx-sdk-11.0.2\\lib\" --add-modules=javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.web"
         }
