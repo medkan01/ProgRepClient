@@ -43,7 +43,7 @@ If you are running this program on Visual Studio Code, you must have your config
     ]
 }
 ```
-- right click on `Serveur.java` and click `Run Java`
+- right click on `Client.java` and click `Run Java`
 
 If you want to open an other window of client do as following : 
 - a side bar next to the console will be created with atleast 1 element : `Java Process Console`. Click on it and click on the icon to split (on the right of the name) the terminal ( Ctrl + Shift + ( )
