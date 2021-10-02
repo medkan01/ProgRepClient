@@ -1,6 +1,6 @@
 # ProgRepClient
 
-To execute this project you will need the other part named [ProgRepServer](https://github.com/medkan01/ProgRepServer).
+To execute this project you will need the other part named [ProgRepServer](https://github.com/medkan01/ProgRepServeur).
 
 When lauching the main class, you will need to specify arguments : 
 - the name of the host : in our case we will stay in local so `localhost`
